@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="test"></div>
+    <script type="text/javascript" src="./js/react.development.js"></script>
+    <script type="text/javascript" src="./js/react-dom.development.js"></script>
+    <script type="text/javascript" src="./js/babel.min.js"></script>
+    <script type="text/babel">
+    // React.Component是react中内置的类
+    // 创建类式组件
+    class Weather extends React.Component {
+        // 初始化Weather就要constructor，否则就可以不要
+        constructor(props){
+            // 构造器只调用1次
+            console.log(constructor)
+            super(props)
+            // this.state={
+            //     isHot:true
+            // }
+            this.Weather=this.demo.bind(this)
+
+        }
+        state={
+                isHot:true
+            }
+        render(){
+            // 读取状态  this.state.isHot
+            const {isHot} = this.state
+            return <h2 onClick={this.Weather}>今天天气很{isHot?'炎热':'寒冷'}</h2>
+        }
+        // 自定义方法=赋值语句+箭头函数
+        demo=()=>{
+        // this是Weather的实例对象
+        this.setState({
+            isHot:!this.state.isHot
+        })
+        }
+
+    }
+    // 渲染组件到页面
+    ReactDOM.render(<Weather/>,document.getElementById('test'))  
+    </script>
+</body>
+
+</html>

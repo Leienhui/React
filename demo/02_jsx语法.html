@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .h3 {
+            background-color: aqua;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="test"></div>
+    <!-- 最先引入react核心库 -->
+    <script type="text/javascript" src="./js/react.development.js"></script>
+    <script type="text/javascript" src="./js/react-dom.development.js"></script>
+    <script type="text/javascript" src="./js/babel.min.js"></script>
+    <!-- type必须写 -->
+    <script type="text/babel">
+    const h1Id='h1'
+    const arr = ["angular", "vue", "react"];
+    // 创建虚拟dom
+    const vDom=(
+        <div id={h1Id}>
+            {arr.map((e)=> <h3 className="h3" key={e}>{e}</h3>)}
+        </div>
+        
+    )
+    // 渲染虚拟dom到页面
+    // ReactDOM.render(虚拟dom,渲染到的容器)
+    ReactDOM.render(vDom,document.getElementById('test'))
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="test1"></div>
+    <div id="test2"></div>
+    <div id="test3"></div>
+    <script src="./js/react.development.js"></script>
+    <script src="./js/react-dom.development.js"></script>
+    <script src="./js/babel.min.js"></script>
+    <script type="text/babel">
+    class Person extends React.Component{
+        constructor(props){
+            super(props)
+        }
+        sex='男'
+        render(){
+            return (
+                <ul>
+                    <li>{this.props.name}</li>
+                    <li>{this.props.sex}</li>
+                    <li>{this.props.age+1}</li>
+                </ul>
+            )
+            
+        }
+    }
+    // 这里传递的属性被存储到props中,
+    // 传递props就是传递标签属性
+    // 这里的age是字符串类型
+    ReactDOM.render(<Person name="tom"  sex="男" age="18"/>,document.getElementById('test1'))
+    // 需要写数字类型的19
+    ReactDOM.render(<Person name="小红" sex="女" age={19} />,document.getElementById('test2'))
+    const p1 ={name:"小华",age:18,sex:"男", }
+    // babel可以通过{...对象名称}来展开一个对象进行传参，只能用于标签属性
+    ReactDOM.render(<Person {...p1}/>,document.getElementById('test3'))
+    </script>
+</body>
+</html>

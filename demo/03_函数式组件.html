@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="test"></div>
+    <script type="text/javascript" src="./js/react.development.js"></script>
+    <script type="text/javascript" src="./js/react-dom.development.js"></script>
+    <script type="text/javascript" src="./js/babel.min.js"></script>
+    <script type="text/babel">
+    // 创建函数式组件
+    function FunComponent(){
+        //babel编译后开启了严格模式，所以这里的this式undefined
+        return <h2>我是函数定义的组件</h2>
+    }
+    // 渲染组件到页面
+  ReactDOM.render(<FunComponent/>,document.getElementById('test'))
+/*
+执行了 ReactDOM.render()后发生了什么
+
+*/   
+    </script>
+</body>
+
+</html>

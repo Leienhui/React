@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="test1"></div>
+    <div id="test2"></div>
+    <div id="test3"></div>
+    <!-- 全局拥有React -->
+    <script src="./js/react.development.js"></script> 
+    <!--全局拥有ReactDOM  -->
+    <script src="./js/react-dom.development.js"></script>
+    <script src="./js/babel.min.js"></script>
+    <!-- 用于对组件标签属性进行限制 -->
+    <!-- 全局拥有PropTypes -->
+    <script src="./js/prop-types.js"></script>
+    <script type="text/babel">
+    class Person extends React.Component{
+        // React.createRef()调用后会返回一个容器，该容器可以存储ref所表示的节点,render中的标签使用ref的时候，不能同名，否则后面的就会覆盖前面的
+        myRef=React.createRef()
+        state={isHot:true}
+        showData=()=>{
+           console.log( this.myRef)//{current: input}
+           console.log( this.myRef.current)//<input type="text" placeholder="1234"/>
+           console.log( this.myRef.current.value)//1234
+        }
+        changeWeather=()=>{
+            this.setState({isHot:!this.state.isHot})
+        }
+        render(){
+            return (
+                <div>
+                    <h1 onClick={this.changeWeather}>今天天气很{this.state.isHot?'炎热':'寒冷'}</h1>
+                     <input ref={this.myRef} type="text" placeholder="1234"/>
+                    <button onClick={this.showData}>点我提示左侧数据</button>
+                </div>
+            )
+            
+        }
+       
+    }
+ 
+    // 传递props就是传递标签属性，是只读的，不能修改props中的属性值
+    ReactDOM.render(<Person/>,document.getElementById('test1'))
+    // 字符串类型效率不高
+    </script>
+</body>
+</html>

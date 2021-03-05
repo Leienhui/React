@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+    </head>
+    <body>
+        <script>
+            let arr1 = [1,2,34,5]
+            let arr2 = [34,12,64,90]
+            // 展开一个数组
+            console.log(...arr1)//1 2 34 5
+            // 连接两个数组
+            let arr3=[...arr1,...arr2]
+            console.log(arr3)//[1, 2, 34, 5, 34, 12, 64, 90]
+            // 用于传参
+            function sum(...num){
+                console.log(num)//[1,2,3,4,5,6]
+            }
+            sum(1,2,3,4,5,6)
+            // 展开运算符不能展开对象
+            let person1 ={name:'tom','age':18}
+            // 复制一个对象{...}
+            let person2 ={...person1}
+            console.log(person2)//{name:'tom','age':18}
+            person2.name="小红"
+            console.log(person2)//{name:'小红','age':18}
+            console.log(person1)//{name:'tom','age':18}
+            // 复制的时候直接改属性值（合并）
+            let person3 ={...person1,name:'花花',address:'南开区'}
+            console.log(person3)//{name: "花花", age: 18,address:'南开区'}
+
+        </script>
+    </body>
+    </html>
+</body>
+</html>

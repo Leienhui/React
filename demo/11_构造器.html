@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="test1"></div>
+    <div id="test2"></div>
+    <div id="test3"></div>
+    <!-- 全局拥有React -->
+    <script src="./js/react.development.js"></script> 
+    <!--全局拥有ReactDOM  -->
+    <script src="./js/react-dom.development.js"></script>
+    <script src="./js/babel.min.js"></script>
+    <!-- 用于对组件标签属性进行限制 -->
+    <!-- 全局拥有PropTypes -->
+    <script src="./js/prop-types.js"></script>
+    <script type="text/babel">
+    class Person extends React.Component{
+        constructor(props){
+            super(props)
+            console.log(this.props)//{name="小红",sex="女",age=19}
+        }
+        // constructor(){
+        //     super()
+        //     console.log(this.props)//undefined
+        // }
+        render(){
+            return (
+                <ul>
+                    <li>{this.props.name}</li>
+                    <li>{this.props.sex}</li>
+                    <li>我是计算不是修改：{this.props.age+1}</li>
+                </ul>
+            )
+            
+        }
+        static propTypes={
+        name:PropTypes.string.isRequired,
+        sex:PropTypes.string,
+        age:PropTypes.number,
+        speak:PropTypes.func
+
+        }
+        static defualtProps={
+        sex:'男',
+        age:18
+        }
+    }
+    ReactDOM.render(<Person name="小红" sex="女" age={19} />,document.getElementById('test1'))
+    </script>
+</body>
+</html>

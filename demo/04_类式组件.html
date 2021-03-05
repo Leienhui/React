@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="test"></div>
+    <script type="text/javascript" src="./js/react.development.js"></script>
+    <script type="text/javascript" src="./js/react-dom.development.js"></script>
+    <script type="text/javascript" src="./js/babel.min.js"></script>
+    <script type="text/babel">
+    // React.Component是react中内置的类
+    // 创建类式组件
+    class MyComponent extends React.Component {
+        // render函数是放在MyComponent这个类的原型对象上，供实例使用
+        // 实例是什么呢？
+        render(){        
+            return <h2>我是类定义的组件</h2>
+        }
+
+    }
+    // 渲染组件到页面
+  ReactDOM.render(<MyComponent/>,document.getElementById('test'))  
+    </script>   
+</body>
+</html>

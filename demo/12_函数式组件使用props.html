@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="test1"></div>
+    <div id="test2"></div>
+    <div id="test3"></div>
+    <!-- 全局拥有React -->
+    <script src="./js/react.development.js"></script> 
+    <!--全局拥有ReactDOM  -->
+    <script src="./js/react-dom.development.js"></script>
+    <script src="./js/babel.min.js"></script>
+    <!-- 用于对组件标签属性进行限制 -->
+    <!-- 全局拥有PropTypes -->
+    <script src="./js/prop-types.js"></script>
+    <script type="text/babel">
+    function Person(props){
+        console.log(this)//undefined
+        return (
+                <ul>
+                    <li>{props.name}</li>
+                    <li>{props.sex}</li>
+                    <li>我是计算不是修改：{props.age+1}</li>
+                </ul>
+            )
+    }
+        // 对标签属性进行限制
+    // props的验证规则
+    Person.propTypes={
+        name:PropTypes.string.isRequired,
+        sex:PropTypes.string,
+        age:PropTypes.number,
+        // 给函数设置规则func,指定是函数
+        speak:PropTypes.func
+
+    }
+    // 设置默认值
+    Person.defualtProps={
+        sex:'男',
+        age:18
+    }
+    ReactDOM.render(<Person name="小红" sex="女" age={19} />,document.getElementById('test1'))
+    </script>
+</body>
+</html>
