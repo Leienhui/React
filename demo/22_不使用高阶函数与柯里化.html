@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="test1"></div>
+    <div id="test2"></div>
+    <div id="test3"></div>
+    <!-- 全局拥有React -->
+    <script src="./js/react.development.js"></script> 
+    <!--全局拥有ReactDOM  -->
+    <script src="./js/react-dom.development.js"></script>
+    <script src="./js/babel.min.js"></script>
+    <!-- 用于对组件标签属性进行限制 -->
+    <!-- 全局拥有PropTypes -->
+    <script src="./js/prop-types.js"></script>
+    <script type="text/babel">
+    class Login extends React.Component{
+        // 初始化状态
+        state={
+            username:'',
+            password:''
+        }
+        handleSumit=(e)=>{
+        //    得到节点
+        const {username,password}=this
+        console.log(username.value)
+        console.log(password.value)
+        // 阻止表单提交的默认事件
+        e.preventDefault()
+        }
+        savaUserInfo=(dataType,value)=>{
+            this.setState({[dataType]:value})
+        }
+        render(){
+            return (
+                // onSubmit是react的
+                <form action="" onSubmit={this.handleSumit}>
+                     <input onChange={(e)=>{this.savaUserInfo('username',e.target.value)}} name="username" type="text" placeholder="请输入用户名"/>
+                     <input onChange={(e)=>{this.savaUserInfo('password',e.target.value)}} name="password" type="password" placeholder="请输入用密码"/>
+                     <button>登录</button>
+                </form>
+            )
+            
+        }
+       
+    }
+ 
+    // 传递props就是传递标签属性，是只读的，不能修改props中的属性值
+    ReactDOM.render(<Login/>,document.getElementById('test1'))
+    </script>
+</body>
+</html>

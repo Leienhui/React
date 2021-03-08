@@ -387,7 +387,7 @@
                   // 复制的时候直接改属性值（合并）
                   let person3 ={...person1,name:'花花',address:'南开区'}
                   console.log(person3)//{name: "花花", age: 18,address:'南开区'}
-      
+        
               </script>
       ```
 
@@ -424,8 +424,9 @@
       ```
 
 *   扩展属性: 将对象的所有属性通过props传递
-  * `<Person {...person}/>`
-
+  
+* `<Person {...person}/>`
+  
 *  默认属性值：
 
   * ```javascript
@@ -505,7 +506,7 @@
       super(props)
       console.log(props)//打印所有属性
     }
-     ```
+    ```
 
   * ```javascript
         <script type="text/babel">
@@ -596,9 +597,96 @@
 
   * `<input ref="input1"/>`
 
+  * ```javascript
+        <script type="text/babel">
+        class Person extends React.Component{
+            showData=()=>{
+               console.log( this.refs.input1.value)
+            }
+            render(){
+                return (
+                    <div>
+                        <input ref='input1' type="text" placeholder="输入提示数据"/>
+                        <button onClick={this.showData}>点我提示左侧数据</button>
+                    </div>
+                )
+                
+            }
+           
+        }
+    
+        // 传递props就是传递标签属性，是只读的，不能修改props中的属性值
+        ReactDOM.render(<Person/>,document.getElementById('test1'))
+        // 字符串类型效率不高
+        </script>
+    ```
+
+  * 
+
 * 回调形式的ref
 
   * `<input ref={(c)=>{this.input1 = c}}`
+
+  * ```javascript
+        <script type="text/babel">
+        class Person extends React.Component{
+            showData=()=>{
+               console.log( this.input1.value)
+            }
+            render(){
+                return (
+                    <div>
+                        <input ref={currentNode=>this.input1=currentNode} type="text" placeholder="这个回调函数的参数就是这个dom节点，也就是把当前这个节点挂载到实例自身上"/>
+                        <button onClick={this.showData}>点我提示左侧数据</button>
+                    </div>
+                )
+                
+            }
+           
+        }
+     
+        // 传递props就是传递标签属性，是只读的，不能修改props中的属性值
+        ReactDOM.render(<Person/>,document.getElementById('test1'))
+        </script>
+    ```
+
+  * 解决次数问题
+
+    * ```javascript
+          <script type="text/babel">
+          class Person extends React.Component{
+              state={isHot:true}
+              showData=()=>{
+                 console.log( this.input1.value)
+              }
+              changeWeather=()=>{
+                  this.setState({isHot:!this.state.isHot})
+              }
+              saveInput=(currentNode)=>{
+                  this.input1=currentNode
+                  console.log(currentNode)
+              }
+              render(){
+                  return (
+                      <div>
+                          <h1 onClick={this.changeWeather}>今天天气很{this.state.isHot?'炎热':'寒冷'}</h1>
+                          {/*这个回调函数的参数就是这个dom节点，也就是把当前这个节点挂载到实例自身上*/}
+                          {/*内联的这种
+                          写法当更新的时候会更新两次，先清空（currentNode=null）再从新更新*/}
+                           {/*<input ref={(currentNode)=>{this.input1=currentNode;console.log(currentNode)}} type="text" placeholder=""/>*/}
+                           <input ref={this.saveInput} type="text" placeholder=""/>
+                          <button onClick={this.showData}>点我提示左侧数据</button>
+                      </div>
+                  )
+                  
+              }
+             
+          }
+       
+          // 传递props就是传递标签属性，是只读的，不能修改props中的属性值
+          ReactDOM.render(<Person/>,document.getElementById('test1'))
+          </script>
+      ```
 
 *  createRef创建ref容器·
 
@@ -607,4 +695,335 @@
     <input ref={this.myRef}/>
     ```
 
-    
+  * ```javascript
+        <script type="text/babel">
+        class Person extends React.Component{
+            // React.createRef()调用后会返回一个容器，该容器可以存储ref所表示的节点,render中的标签使用ref的时候，不能同名，否则后面的就会覆盖前面的
+            myRef=React.createRef()
+            state={isHot:true}
+            showData=()=>{
+               console.log( this.myRef)//{current: input}
+               console.log( this.myRef.current)//<input type="text" placeholder="1234"/>
+               console.log( this.myRef.current.value)//1234
+            }
+            changeWeather=()=>{
+                this.setState({isHot:!this.state.isHot})
+            }
+            render(){
+                return (
+                    <div>
+                        <h1 onClick={this.changeWeather}>今天天气很{this.state.isHot?'炎热':'寒冷'}</h1>
+                         <input ref={this.myRef} type="text" placeholder="1234"/>
+                        <button onClick={this.showData}>点我提示左侧数据</button>
+                    </div>
+                )
+                
+            }
+           
+        }
+     
+        // 传递props就是传递标签属性，是只读的，不能修改props中的属性值
+      ReactDOM.render(<Person/>,document.getElementById('test1'))
+        </script>
+    ```
+
+##   事件处理
+
+* 通过onXxx属性指定事件处理函数(注意大小写)
+
+  * React使用的是自定义(合成)事件, 而不是使用的原生DOM事件
+    * 为了更好的兼容
+
+  *  React中的事件是通过**事件委托方式**处理的(委托给组件最外层的元素)
+    * 事件委托的原理是事件冒泡
+    * 为了高效
+
+*  通过`event.target`得到**发生事件的DOM元素对象**,不要过度使用ref
+
+  * ```javascript
+        <script type="text/babel">
+        class Person extends React.Component{
+            state={isHot:true}
+            showData=(e)=>{
+               console.log(e.target.value)//<input  type="text" placeholder="1234"/>
+               console.log(e.target.value)//1234
+            }
+            changeWeather=()=>{
+                this.setState({isHot:!this.state.isHot})
+            }
+            render(){
+                return (
+                    <div>
+                        <h1 onClick={this.changeWeather}>今天天气很{this.state.isHot?'炎热':'寒冷'}</h1>
+                         <input onBlur={this.showData}  type="text" placeholder="1234"/>
+                    </div>
+                )
+                
+            }
+           
+        }
+     
+        // 传递props就是传递标签属性，是只读的，不能修改props中的属性值
+        ReactDOM.render(<Person/>,document.getElementById('test1'))
+        </script>
+    ```
+
+##  表单组件之受控组件
+
+* 将所有输入框的数据存储到state中，需要使用的时候，直接从state中取数据
+
+* 受控组件中没有ref
+
+* ```javascript
+      <script type="text/babel">
+      class Login extends React.Component{
+          // 初始化状态
+          state={
+              username:'',
+              password:''
+          }
+          handleSumit=(e)=>{
+          //    得到节点
+          const {username,password}=this
+          console.log(username.value)
+          console.log(password.value)
+          // 阻止表单提交的默认事件
+          e.preventDefault()
+          }
+          savaUserInfo=(dataType)=>{
+              return (e)=>{
+              this.setState({[dataType]:e.target.value})
+              console.log(e.target.value)
+              }
+          }
+          render(){
+              return (
+                  // onSubmit是react的
+                  <form action="" onSubmit={this.handleSumit}>
+                       <input onChange={this.savaUserInfo('username')} name="username" type="text" placeholder="请输入用户名"/>
+                       <input onChange={this.savaUserInfo('password')} name="password" type="password" placeholder="请输入用密码"/>
+                       <button>登录</button>
+                  </form>
+              )
+              
+          }
+         
+      }
+   
+      // 传递props就是传递标签属性，是只读的，不能修改props中的属性值
+      ReactDOM.render(<Login/>,document.getElementById('test1'))
+      </script>
+  ```
+
+* 
+
+##  表单组件之非受控组件
+
+* 现用现取
+
+* ```javascript
+      <script type="text/babel">
+      class Login extends React.Component{
+          handleSumit=(e)=>{
+          //    得到节点
+          const {username,password}=this
+          console.log(username.value)
+          console.log(password.value)
+          // 阻止表单提交的默认事件
+          e.preventDefault()
+          }
+          render(){
+              return (
+                  // onSubmit是react的
+                  <form action="" onSubmit={this.handleSumit}>
+                       <input ref={currentNode=>this.username=currentNode} name="username" type="text" placeholder="请输入用户名"/>
+                       <input ref={currentNode=>this.password=currentNode} name="password" type="password" placeholder="请输入用密码"/>
+                       <button>登录</button>
+                  </form>
+              )
+              
+          }
+         
+      }
+   
+      // 传递props就是传递标签属性，是只读的，不能修改props中的属性值
+      ReactDOM.render(<Login/>,document.getElementById('test1'))
+      </script>
+  ```
+
+##   高级函数
+
+* 如果函数A的接收的参数是一个函数，那么a是高阶函数
+* 如果函数A的return的是一个函数，那么a是高阶函数
+
+* ## 如果对象的属性名是一个变量，可以通过数组的形式调用，否则就按字符串计算
+
+##  函数的柯里化
+
+* 通过函数调用继续返回函数的方式，实现多次接收参数最后统一处理的函数编码形式
+
+* ```javascript
+      <script>
+            function sum(a){
+             return (b)=>{
+                 return (c)=>{
+                  return a+b+c
+                 }
+  
+             }
+           }
+           const result =sum(1)(2)(3)
+           console.log(result)//6
+  
+      </script>
+  ```
+
+* 不使用高阶函数与函数柯里化获取事件与参数
+
+* ```javascript
+      <script type="text/babel">
+      class Login extends React.Component{
+          // 初始化状态
+          state={
+              username:'',
+              password:''
+          }
+          handleSumit=(e)=>{
+          //    得到节点
+          const {username,password}=this
+          console.log(username.value)
+          console.log(password.value)
+          // 阻止表单提交的默认事件
+          e.preventDefault()
+          }
+          savaUserInfo=(dataType,value)=>{
+              this.setState({[dataType]:value})
+          }
+          render(){
+              return (
+                  // onSubmit是react的
+                  <form action="" onSubmit={this.handleSumit}>
+                       <input onChange={(e)=>{this.savaUserInfo('username',e.target.value)}} name="username" type="text" placeholder="请输入用户名"/>
+                       <input onChange={(e)=>{this.savaUserInfo('password',e.target.value)}} name="password" type="password" placeholder="请输入用密码"/>
+                       <button>登录</button>
+                  </form>
+              )
+              
+          }
+         
+      }
+   
+      // 传递props就是传递标签属性，是只读的，不能修改props中的属性值
+      ReactDOM.render(<Login/>,document.getElementById('test1'))
+      </script>
+  ```
+
+##  组件的生命周期
+
+* 组件从创建到死亡它会经历一些特定的阶段。
+* React组件中包含一系列勾子函数(生命周期回调函数), 会在特定的时刻调用。
+* 我们在定义组件时，会在特定的生命周期回调函数中，做特定的工作。
+
+##  组件的生命周期(旧生命周期)
+
+* ![](../images\旧生命周期图.png)
+
+
+
+* ## 生命周期的三个阶段（旧）
+
+* **初始化阶段:** 由ReactDOM.render()触发---初次渲染
+  * constructor()
+  *  componentWillMount()
+  * render()
+  * componentDidMount()
+
+* **更新阶段:** 由组件内部this.setSate()或父组件重新render触发
+  * shouldComponentUpdate()
+  * componentWillUpdate()
+  * render()
+  * componentDidUpdate()
+
+* **卸载组件:** 由ReactDOM.unmountComponentAtNode()触发
+  * componentWillUnmount()
+
+##  组件的生命周期(新生命周期)
+
+![](../images\新生命周期图.png)
+
+* ##  生命周期的三个阶段（新）
+
+* **初始化阶段:** 由ReactDOM.render()触发---初次渲染
+
+  * constructor()
+
+  * **getDerivedStateFromProps** 
+
+  *  render()
+
+  * componentDidMount()
+    * 一般在这个钩子中做一些初始化的事情
+    * 如：开启定时器，发送网路请求，订阅消息
+
+*  **更新阶段:** 由组件内部this.setSate()或父组件重新render触发
+  * **getDerivedStateFromProps**
+  * shouldComponentUpdate()
+  * render()
+  * **getSnapshotBeforeUpdate**
+  *  componentDidUpdate()
+
+* **卸载组件:** 由ReactDOM.unmountComponentAtNode()触发
+  * componentWillUnmount()
+
+    * 一般在这个钩子中做一些收尾的事情
+
+    * 如：清空定时器、取消订阅
+
+##   重要的勾子
+
+* render：初始化渲染或更新渲染调用
+*  componentDidMount：开启监听, 发送ajax请
+* componentWillUnmount：做一些收尾工作, 如: 清理定时器
+
+##   即将废弃的勾子
+
+*  componentWillMount
+* componentWillReceiveProps
+*  componentWillUpdate
+
+* 现在使用会出现警告，下一个大版本需要加上UNSAFE_前缀才能使用，以后可能会被彻底废弃，不建议使用。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

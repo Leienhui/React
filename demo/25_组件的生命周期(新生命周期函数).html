@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="test1"></div>
+    <div id="test2"></div>
+    <div id="test3"></div>
+    <!-- 全局拥有React -->
+    <script src="./js/react.development.js"></script> 
+    <!--全局拥有ReactDOM  -->
+    <script src="./js/react-dom.development.js"></script>
+    <script src="./js/babel.min.js"></script>
+    <!-- 用于对组件标签属性进行限制 -->
+    <!-- 全局拥有PropTypes -->
+    <script src="./js/prop-types.js"></script>
+    <script type="text/babel">
+    // 创建组件
+    class Life extends React.Component{
+        // ①构造器
+        constructor(props){
+            console.log('constructor')
+            super(props)
+             // 初始化状态
+            this.state={opacity:1}
+        }
+        // 组件将要挂载(新版本写法)
+        UNSAFE_componentWillMount(){
+            console.log('UNSAFE_componentWillMount')
+        }
+        // 组件挂载完毕
+        componentDidMount(){
+            // 这里的this就是组件的实例对象
+            this.timer=setInterval(()=>{
+                let {opacity}=this.state
+                opacity-=0.1
+                if(opacity<=0){
+                    opacity=1
+                }
+                this.setState({opacity})
+            },200)
+        }
+        // 组件将要卸载
+        componentWillUnmount(){
+            // 在将要卸载的时候一定要将定时器或者事件清空(也可以在卸载组件的时候做)
+            clearInterval(this.timer)
+            console.log('componentWillUnmount')
+
+        }
+        // 状态中的值是否更新（默认为true）
+        shouldComponentUpdate(){
+            console.log('shouldComponentUpdate')
+            return false
+
+        }
+        // 组件将要更新(新版本写法)
+        UNSAFE_componentWillUpdate(){
+            console.log('UNSAFE_componentWillUpdate')
+        }
+         // 组件完成更新
+         componentDidUpdate(){
+            console.log('componentDidUpdate')
+        }
+        //渲染组件（挂载组件）    
+        render(){
+            return (
+                <div>
+                    <h2 style={{opacity:this.state.opacity}}>生命周期</h2>
+                    <button onClick={this.death}>卸载组件</button>
+                    <button onClick={this.force}>不更改任何状态强制更新</button>
+                </div>
+            )
+            
+        }
+        // 卸载组件
+        death=()=>{
+             // 卸载组件
+            ReactDOM.unmountComponentAtNode(document.getElementById('test1'))
+        }
+        // 强制更新，就是不经过shouldComponentUpdate(),不修改状态，就想更新以下
+        force=()=>{
+            this.forceUpdate()
+        }
+       
+    }
+
+    // 父子组件渲染生命周期函数、
+    class Father extends React.Component{
+        state={name:'小明'}
+        changeName=()=>{
+            this.setState({name:'小红'})
+        }
+        render(){
+            return(
+                <div>
+                    <h2>Father组件中</h2>
+                    <button onClick={this.changeName}>Father中换名</button>
+                    <Son name={this.state.name}/>
+                </div>
+            )
+        }
+    }
+    class Son extends React.Component{
+        // 新版本写法
+        // 组件将要接收新的props时触发（第一次将要接收props时不触发）
+        UNSAFE_componentWillReceiveProps(props){
+            console.log('UNSAFE_componentWillReceiveProps',props)
+        }
+        render(){
+            return(
+                <div>Son组件，接收到Father的数据是：{this.props.name}</div>
+            )
+        }
+    }
+    //渲染组件
+    ReactDOM.render(<Life/>,document.getElementById('test1'))
+    ReactDOM.render(<Father/>,document.getElementById('test2'))
+
+    </script>
+</body>
+</html>
